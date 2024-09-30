@@ -91,7 +91,7 @@ curl -i -X GET -H "Content-Type: application/json" "http://localhost:8081/songs?
  ```
 curl -i -X GET -H "Content-Type: application/json" http://localhost:8081/song/1
  ```
- 4. Редактирование песни:
+ 4. Редактирование песни по ID:
  ```
 curl -i -X PATCH -H "Content-Type: application/json" -d '{"group_name": "UpdateName", "song": "UpdateSong", "link": "UpdateLink"}' http://localhost:8081/song/1
 ```
@@ -103,11 +103,11 @@ curl -i -X DELETE -H "Content-type: application/json" http://localhost:8081/song
 ```
 curl -i -X GET -H "Content-type: application/json" "http://localhost:8081/song/1/verse?lang=ru&limit=20&offset=5"
 ```
-7. Удаление текста песни по ID
+7. Удаление текста песни по ID:
 ```
 curl -i -X DELETE -H "Content-type: application/json" http://localhost:8081/song/1/verse
 ```
-8. 
+8. Редактирование текста песни по ID:
 ```
 curl -i -X PATCH -H "Content-Type: application/json" -d '{"verse_text_en": "UpdateTextru","verse_text_ru":"Новый текст"}' http://localhost:8081/
 song/1/verse
