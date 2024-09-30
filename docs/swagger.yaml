@@ -1,0 +1,342 @@
+definitions:
+  handler.addSongRequest:
+    properties:
+      group_name:
+        type: string
+      song:
+        type: string
+    required:
+    - group_name
+    - song
+    type: object
+  handler.updateSongRequest:
+    properties:
+      group_name:
+        type: string
+      link:
+        type: string
+      release_date:
+        type: string
+      song:
+        type: string
+    type: object
+  handler.updateVerseRequest:
+    properties:
+      verse_text_en:
+        type: string
+      verse_text_ru:
+        type: string
+    type: object
+  storer.Song:
+    properties:
+      created_at:
+        type: string
+      group_name:
+        type: string
+      id:
+        type: integer
+      link:
+        type: string
+      release_date:
+        type: string
+      song:
+        type: string
+      updated_at:
+        type: string
+    type: object
+  storer.Verse:
+    properties:
+      created_at:
+        type: string
+      id:
+        type: integer
+      song_id:
+        type: integer
+      updated_at:
+        type: string
+      verse_text_en:
+        type: string
+      verse_text_ru:
+        type: string
+    type: object
+host: localhost:8081
+info:
+  contact: {}
+  description: API for managing a music library.
+  title: Music Library API
+  version: "1.0"
+paths:
+  /song:
+    post:
+      consumes:
+      - application/json
+      description: Adds a new song along with its verses to the database
+      parameters:
+      - description: Song details
+        in: body
+        name: song
+        required: true
+        schema:
+          $ref: '#/definitions/handler.addSongRequest'
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Created
+          schema:
+            $ref: '#/definitions/storer.Song'
+        "400":
+          description: Error fetching song details
+          schema:
+            type: string
+        "500":
+          description: Internal server error
+          schema:
+            type: string
+      summary: Add a new song
+      tags:
+      - songs
+  /song/{id}:
+    delete:
+      description: Deletes a song using its unique identifier
+      parameters:
+      - description: Song ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      responses:
+        "204":
+          description: Successfully deleted song
+        "400":
+          description: Invalid ID
+          schema:
+            type: string
+        "404":
+          description: Song not found
+          schema:
+            type: string
+        "500":
+          description: Internal server error
+          schema:
+            type: string
+      summary: Delete a song by ID
+      tags:
+      - songs
+    get:
+      consumes:
+      - application/json
+      description: Retrieves a song by its unique identifier
+      parameters:
+      - description: Song ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/storer.Song'
+        "400":
+          description: Invalid ID
+          schema:
+            type: string
+        "404":
+          description: Song not found
+          schema:
+            type: string
+        "500":
+          description: Internal server error
+          schema:
+            type: string
+      summary: Get a song by ID
+      tags:
+      - songs
+    patch:
+      consumes:
+      - application/json
+      description: Updates a song's details using its unique identifier
+      parameters:
+      - description: Song ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      - description: Song details
+        in: body
+        name: song
+        required: true
+        schema:
+          $ref: '#/definitions/handler.updateSongRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/storer.Song'
+        "400":
+          description: Invalid ID or request body
+          schema:
+            type: string
+        "404":
+          description: Song not found
+          schema:
+            type: string
+        "500":
+          description: Internal server error
+          schema:
+            type: string
+      summary: Update a song by ID
+      tags:
+      - songs
+  /song/{id}/verse:
+    delete:
+      description: Deletes a verse associated with a specific song using its unique
+        identifier
+      parameters:
+      - description: Song ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      responses:
+        "204":
+          description: No content
+        "400":
+          description: Invalid song ID
+          schema:
+            type: string
+        "404":
+          description: Verse not found
+          schema:
+            type: string
+        "500":
+          description: Internal server error
+          schema:
+            type: string
+      summary: Delete verse by song ID
+      tags:
+      - verses
+    get:
+      description: Retrieves verses for a specific song using its unique identifier
+      parameters:
+      - description: Song ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      - description: Language (en or ru)
+        in: query
+        name: lang
+        type: string
+      - default: 10
+        description: Number of verses to return
+        in: query
+        name: limit
+        type: integer
+      - default: 0
+        description: Number of verses to skip
+        in: query
+        name: offset
+        type: integer
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/storer.Verse'
+        "400":
+          description: Invalid parameters
+          schema:
+            type: string
+        "404":
+          description: Song not found
+          schema:
+            type: string
+        "500":
+          description: Internal server error
+          schema:
+            type: string
+      summary: Get verses by song ID
+      tags:
+      - verses
+    patch:
+      description: Updates a verse associated with a specific song using its unique
+        identifier
+      parameters:
+      - description: Song ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      - description: Verse data to update
+        in: body
+        name: verse
+        required: true
+        schema:
+          $ref: '#/definitions/handler.updateVerseRequest'
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/storer.Verse'
+        "400":
+          description: Invalid parameters
+          schema:
+            type: string
+        "404":
+          description: Verse not found
+          schema:
+            type: string
+        "500":
+          description: Internal server error
+          schema:
+            type: string
+      summary: Update verse by song ID
+      tags:
+      - verses
+  /songs:
+    get:
+      consumes:
+      - application/json
+      description: Retrieves a list of all songs with optional filtering, limit, and
+        offset
+      parameters:
+      - description: Filter songs by group name or title
+        in: query
+        name: filter
+        type: string
+      - default: 5
+        description: Number of songs to return
+        in: query
+        name: limit
+        type: integer
+      - default: 0
+        description: Number of songs to skip
+        in: query
+        name: offset
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/storer.Song'
+            type: array
+        "400":
+          description: Invalid query parameters
+          schema:
+            type: string
+        "500":
+          description: Internal server error
+          schema:
+            type: string
+      summary: Get all songs
+      tags:
+      - songs
+swagger: "2.0"

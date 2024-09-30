@@ -1,0 +1,8 @@
+CREATE TABLE verses (
+    id SERIAL PRIMARY KEY,
+    song_id INT REFERENCES songs(id) ON DELETE CASCADE,
+    verse_text_en TEXT NOT NULL,
+    verse_text_ru TEXT NOT NULL,
+    created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP WITH TIME ZONE
+);

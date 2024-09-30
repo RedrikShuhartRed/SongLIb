@@ -1,0 +1,10 @@
+CREATE TABLE songs (
+    id SERIAL PRIMARY KEY,
+    group_name VARCHAR(255) NOT NULL,
+    song VARCHAR(255) NOT NULL,
+    release_date VARCHAR(255),
+    link VARCHAR(255),
+    created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP WITH TIME ZONE
+);
+
